@@ -1,3 +1,6 @@
 pkg/
 bin/
-.idea/
+.idea/*
+.DS_Store
+*.iml
+*/*.iml
