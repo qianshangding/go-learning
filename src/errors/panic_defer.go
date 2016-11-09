@@ -3,11 +3,11 @@ package main
 import "fmt"
 
 func main() {
-	f()
+	ff()
 	fmt.Println("Returned normally from f.")
 }
 
-func f() {
+func ff() {
 	defer func() {
 		if r := recover(); r != nil {
 			fmt.Println("Recovered in f", r)

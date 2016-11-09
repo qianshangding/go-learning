@@ -11,7 +11,7 @@ func main() {
 	go sendData(ch)
 	go getData(ch)
 
-	time.Sleep(1e9)
+	time.Sleep(3e9)
 }
 
 func sendData(ch chan string) {

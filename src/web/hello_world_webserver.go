@@ -9,6 +9,7 @@ import (
 func HelloServer(w http.ResponseWriter, req *http.Request) {
 	fmt.Println("进入http请求")
 	fmt.Fprintf(w, "Hello,"+req.URL.Path[1:])
+	fmt.Println(req.URL.Path)
 }
 
 func main() {

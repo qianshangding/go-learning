@@ -1,47 +1,31 @@
-package main
+package pack
 
-import (
-	"fmt"
-	"runtime"
-	"time"
-)
+import "testing"
+import "pack"
 
-func main() {
-	// setting GOMAXPROCS to 2 gives +- 22% performance increase,
-	// but increasing the number doesn't increase the performance
-	// without GOMAXPROCS: +- 86000
-	// setting GOMAXPROCS to 2: +- 105000
-	// setting GOMAXPROCS to 3: +- 94000
-	runtime.GOMAXPROCS(2)
-	ch1 := make(chan int)
-	ch2 := make(chan int)
-
-	go pump1(ch1)
-	go pump2(ch2)
-	go suck(ch1, ch2)
-
-	time.Sleep(1e9)
+type ReverseTest struct {
+	in, out string
 }
 
-func pump1(ch chan int) {
-	for i := 0; ; i++ {
-		ch <- i * 2
-	}
+var ReverseTests = []ReverseTest{
+	ReverseTest{"ABCD", "DCBA"},
+	ReverseTest{"CVO-AZ", "ZA-OVC"},
+	ReverseTest{"Hello 世界", "界世 olleH"},
 }
 
-func pump2(ch chan int) {
-	for i := 0; ; i++ {
-		ch <- i + 5
-	}
-}
-
-func suck(ch1, ch2 chan int) {
-	for i := 0; ; i++ {
-		select {
-		case v := <-ch1:
-			fmt.Printf("%d - Received on channel 1: %d\n", i, v)
-		case v := <-ch2:
-			fmt.Printf("%d - Received on channel 2: %d\n", i, v)
+func TestReverse(t *testing.T) {
+	// testing with a battery of testdata:
+	for _, r := range ReverseTests {
+		exp := strev.Reverse(r.in)
+		if r.out != exp {
+			t.Errorf("Reverse of %s expects %s, but got %s", r.in, exp, r.out)
 		}
+	}
+}
+
+func BenchmarkReverse(b *testing.B) {
+	s := "ABCD"
+	for i := 0; i < b.N; i++ {
+		strev.Reverse(s)
 	}
 }
